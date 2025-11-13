@@ -33,3 +33,17 @@ app.use('/books', booksRoutes)
 
 // Start the web app listening
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+
+var mysql = require('mysql2');
+
+// Define the database connection pool
+const db = mysql.createPool({
+    host: 'localhost',
+    user: 'berties_books_app',
+    password: 'BertiesApp@2024',
+    database: 'berties_books',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+});
+global.db = db;
