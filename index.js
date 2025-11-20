@@ -1,49 +1,46 @@
-// Import express and ejs
-var express = require ('express')
-var ejs = require('ejs')
-const path = require('path')
+// index.js
 
-// Create the express application object
-const app = express()
-const port = 8000
+// Core imports
+const express = require('express');
+const path = require('path');
+const mysql = require('mysql2');
+require('dotenv').config();     // Load .env file for DB credentials
 
-// Tell Express that we want to use EJS as the templating engine
-app.set('view engine', 'ejs')
+// Create the Express application object
+const app = express();
+const PORT = 8000;
 
-// Set up the body parser 
-app.use(express.urlencoded({ extended: true }))
+// ----- View engine -----
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Set up public folder (for css and static js)
-app.use(express.static(path.join(__dirname, 'public')))
+// ----- Middleware -----
+app.use(express.urlencoded({ extended: true }));   // Parse form data
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
 
-// Define our application-specific data
-app.locals.shopData = {shopName: "Bertie's Books"}
+// ----- App-specific data -----
+app.locals.shopData = { shopName: "Bertie's Books" };
 
-// Load the route handlers
-const mainRoutes = require("./routes/main")
-app.use('/', mainRoutes)
-
-// Load the route handlers for /users
-const usersRoutes = require('./routes/users')
-app.use('/users', usersRoutes)
-
-// Load the route handlers for /books
-const booksRoutes = require('./routes/books')
-app.use('/', booksRoutes)
-
-// Start the web app listening
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
-
-var mysql = require('mysql2');
-
-// Define the database connection pool
+// ----- Database connection (mysql2 pool) -----
 const db = mysql.createPool({
     host: 'localhost',
-    user: 'berties_books_app',
-    password: 'BertiesApp@2024',
-    database: 'berties_books',
+    user: process.env.BB_USER,
+    password: process.env.BB_PASSWORD,
+    database: process.env.BB_DATABASE,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
 });
-global.db = db;
+
+global.db = db;   // Make DB available in all routes
+
+// ----- Routes -----
+app.use('/', require('./routes/main'));
+app.use('/users', require('./routes/users'));
+app.use('/', require('./routes/books'));
+
+// ----- Start the web app -----
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}!`);
+});
+   
