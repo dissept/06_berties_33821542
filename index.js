@@ -1,5 +1,3 @@
-// index.js
-
 // Core imports
 const express = require('express');
 const path = require('path');
@@ -23,24 +21,26 @@ app.locals.shopData = { shopName: "Bertie's Books" };
 
 // ----- Database connection (mysql2 pool) -----
 const db = mysql.createPool({
-    host: 'localhost',
     user: process.env.BB_USER,
     password: process.env.BB_PASSWORD,
     database: process.env.BB_DATABASE,
+    socketPath: '/tmp/mysql.sock',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
 });
-
 global.db = db;   // Make DB available in all routes
 
-// ----- Routes -----
-app.use('/', require('./routes/main'));
-app.use('/users', require('./routes/users'));
-app.use('/', require('./routes/books'));
+// ----- Routers -----
+const mainRouter = require('./routes/main');
+const usersRouter = require('./routes/users');
+const booksRouter = require('./routes/books');
+
+app.use('/', mainRouter);
+app.use('/users', usersRouter);
+app.use('/books', booksRouter);   // <-- books mounted here
 
 // ----- Start the web app -----
 app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}!`);
 });
-   

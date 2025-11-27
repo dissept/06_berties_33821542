@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Bargain Books — <%= shopName %></title>
+  <meta charset="utf-8">
+  <title>Bargain Books – <%= shopData.shopName %></title>
 </head>
 <body>
+  <h1>Bargain Books (under £20)</h1>
 
-<h1>Bargain Books (Under £10)</h1>
+  <p>
+    <a href="/">Home</a> |
+    <a href="/books/list">All books</a> |
+    <a href="/books/add">Add book</a>
+  </p>
 
-<p><a href="/">Home</a> | <a href="/list">All Books</a></p>
-
-<table border="1" cellpadding="5">
-<thead>
-<tr>
-    <th>Title</th><th>Author</th><th>Price</th>
-</tr>
-</thead>
-<tbody>
-<% bargains.forEach(b => { %>
-<tr>
-    <td><%= b.title %></td>
-    <td><%= b.author %></td>
-    <td>£<%= b.price %></td>
-</tr>
-<% }) %>
-</tbody>
-</table>
-
+  <% if (books.length === 0) { %>
+    <p>No bargain books right now.</p>
+  <% } else { %>
+    <table border="1" cellpadding="6">
+      <tr>
+        <th>Book name</th>
+        <th>Price (£)</th>
+      </tr>
+      <% books.forEach(function (book) { %>
+        <tr>
+          <td><%= book.name %></td>
+          <td><%= book.price.toFixed ? book.price.toFixed(2) : book.price %></td>
+        </tr>
+      <% }); %>
+    </table>
+  <% } %>
 </body>
 </html>

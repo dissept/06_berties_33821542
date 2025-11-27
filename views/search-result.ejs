@@ -1,39 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Search Results</title>
+  <meta charset="utf-8">
+  <title>Search Results</title>
 </head>
 <body>
+  <h1>Search Results for "<%= keyword %>"</h1>
 
-<h1>Search Results for "<%= keyword %>"</h1>
+  <p><a href="/books/search">New search</a> | <a href="/books/list">All books</a></p>
 
-<p><a href="/search">New search</a></p>
-
-<% if (results.length === 0) { %>
-<p>No books found.</p>
-<% } else { %>
-
-<table border="1" cellpadding="5">
-<thead>
-<tr>
-    <th>Title</th><th>Author</th><th>Price</th>
-</tr>
-</thead>
-<tbody>
-<% results.forEach(b => { %>
-<tr>
-    <td><%= b.title %></td>
-    <td><%= b.author %></td>
-    <td>£<%= b.price %></td>
-</tr>
-<% }) %>
-</tbody>
-</table>
-
-<% } %>
-
-<p><a href="/list">Back to all books</a></p>
-
+  <% if (results.length === 0) { %>
+    <p>No books found.</p>
+  <% } else { %>
+    <table border="1" cellpadding="6">
+      <tr>
+        <th>Book name</th>
+        <th>Price (£)</th>
+      </tr>
+      <% results.forEach(function(book) { %>
+        <tr>
+          <td><%= book.name %></td>
+          <td><%= book.price.toFixed ? book.price.toFixed(2) : book.price %></td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } %>
 </body>
 </html>
