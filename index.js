@@ -21,10 +21,10 @@ app.locals.shopData = { shopName: "Bertie's Books" };
 
 // ----- Database connection (mysql2 pool) -----
 const db = mysql.createPool({
+    host: process.env.BB_HOST,
     user: process.env.BB_USER,
     password: process.env.BB_PASSWORD,
     database: process.env.BB_DATABASE,
-    socketPath: '/tmp/mysql.sock',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
