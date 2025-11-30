@@ -23,10 +23,8 @@ router.get('/search-result', function (req, res, next) {
     });
 });
 
-
 // List all books
-
-router.get('/list', function (req, res, next) {
+router.get('/list', redirectLogin, function (req, res, next) {
     const sqlquery = "SELECT * FROM books";
 
     db.query(sqlquery, (err, result) => {
@@ -34,21 +32,18 @@ router.get('/list', function (req, res, next) {
             console.error("DB error in /books/list:", err);
             return next(err);
         }
-        // render list.ejs and pass books array
         res.render('list.ejs', { books: result });
     });
 });
 
 
-
-
 // Show add form
-router.get('/add', function (req, res, next) {
+router.get('/add', redirectLogin, function (req, res, next) {
     res.render('addbook.ejs');
 });
 
 // Handle add form submit
-router.post('/add', function (req, res, next) {
+router.post('/add', redirectLogin, function (req, res, next) {
     const name = req.body.name;
     const price = parseFloat(req.body.price);
 
@@ -64,10 +59,8 @@ router.post('/add', function (req, res, next) {
 });
 
 
-
 // Delete a book
-
-router.get('/delete/:id', function (req, res, next) {
+router.get('/delete/:id', redirectLogin, function (req, res, next) {
     const id = req.params.id;
     const sqlquery = "DELETE FROM books WHERE id = ?";
 
@@ -81,7 +74,7 @@ router.get('/delete/:id', function (req, res, next) {
 });
 
 // Show edit form
-router.get('/edit/:id', function (req, res, next) {
+router.get('/edit/:id', redirectLogin, function (req, res, next) {
     const id = req.params.id;
     const sqlquery = "SELECT * FROM books WHERE id = ?";
 
@@ -98,7 +91,7 @@ router.get('/edit/:id', function (req, res, next) {
 });
 
 // Handle edit submit
-router.post('/edit/:id', function (req, res, next) {
+router.post('/edit/:id', redirectLogin, function (req, res, next) {
     const id = req.params.id;
     const name = req.body.name;
     const price = parseFloat(req.body.price);
@@ -111,9 +104,9 @@ router.post('/edit/:id', function (req, res, next) {
             return next(err);
         }
         res.render('bookadded.ejs', { name: name, price: price });
-
     });
 });
+
 
 // Bargain books (price < 20)
 router.get('/bargainbooks', function (req, res, next) {
