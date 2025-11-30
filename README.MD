@@ -1,93 +1,126 @@
 # Bertie's Books
 
-A Node.js web application built using Express.js, EJS and MySQL2.  
-The application displays books from a MySQL database, allows users to register, add new books, and search the catalogue.
+A Node.js web application built using Express.js, EJS and MySQL2.
+The application allows users to register, log in, view books, search the catalogue,
+and (when logged in) add, edit or delete books. Authorisation is handled using
+express-session and password hashing via bcrypt.
 
----
+-----------------------------------------------------------
+Technologies Used
+-----------------------------------------------------------
 
-## Technologies Used
+- Node.js          – server environment
+- Express.js       – routing and HTTP handling
+- EJS              – dynamic views
+- MySQL2           – database connection
+- bcrypt           – password hashing
+- express-session  – login sessions
+- PM2              – keeping the app running on the server
+- CSS              – styling
 
-- **Node.js** – runs the server environment  
-- **Express.js** – handles routing and HTTP requests  
-- **EJS** – renders dynamic HTML pages  
-- **MySQL2** – connects the app to the MySQL database  
-- **CSS** – provides styling
+-----------------------------------------------------------
+Main Routes
+-----------------------------------------------------------
 
----
+PUBLIC ROUTES:
+  /                     Home page
+  /about                About the shop
+  /books/search         Book search form
+  /books/search-result  Search results
+  /books/bargainbooks   Books priced under £20
+  /users/register       Registration form
+  /users/login          Login page
 
-## Main Routes
+PROTECTED ROUTES (requires login):
+  /users/list           List all users
+  /books/list           View all books
+  /books/add            Add a new book (GET/POST)
+  /books/edit/:id       Edit an existing book (GET/POST)
+  /books/delete/:id     Delete a book
 
-| Route               | Purpose |
-|---------------------|---------|
-| `/`                 | Home page showing shop name |
-| `/about`            | About page for Bertie’s Books |
-| `/list`             | Shows all books from the database |
-| `/addbook`          | Form to add a new book |
-| `/bookadded`        | Confirms a new book has been added |
-| `/search`           | Search form for books (GET form) |
-| `/search-result`    | Shows search results |
-| `/users/register`   | Registration form (POST form) |
-| `/users/registered` | Displays confirmation after registration |
+Logging out:
+  /logout               Ends the session and redirects to login
 
----
+-----------------------------------------------------------
+How to Install and Run Locally
+-----------------------------------------------------------
 
-## How to Install and Run Locally
+1. Clone the repository:
 
-### 1. Clone the repository
-git clone https://github.com/dissept/berties-books.git
-cd berties-books
+   git clone https://github.com/dissept/berties-books.git
+   cd berties-books
 
----
+2. Install dependencies:
 
-### 2. Install dependencies
+   npm install
 
-npm install
+3. Create a .env file in the project folder and add:
 
----
+   BB_HOST=localhost
+   BB_USER=berties_books_app
+   BB_PASSWORD=yourpasswordhere
+   BB_DATABASE=berties_books
 
-### 3. Set environment variables
+4. Start the application:
 
-Create a `.env` file in the project root with:
+   node index.js
 
-BB_USER=berties_books_app
-BB_PASSWORD=BertiesApp@2024
-BB_DATABASE=berties_books
+5. Open in your browser:
 
----
+   http://localhost:8000
 
-### 4. Start the application
+-----------------------------------------------------------
+Deploying on the University Server (DOC Server)
+-----------------------------------------------------------
 
-node index.js
+1. SSH into the DOC server:
 
----
+   ssh aberj003@doc.gold.ac.uk
 
-### 5. Open in your browser
+2. Navigate to your project directory:
 
-http://localhost:8000
+   cd ~/06_berties_338215425
 
----
+3. Pull latest changes from GitHub (if needed):
 
-## How to Run on the University Server
+   git pull
 
-ssh aberj003@doc.gold.ac.uk
-cd ~/public_html/berties-books
-forever start index.js
+4. Restart the application using PM2:
 
-To view running apps:
-forever list
+   pm2 restart berties_app
 
-To stop the app:
-forever stop <id>
+5. Check that the app is running:
 
----
+   pm2 status
 
-## Live Application URL
+PM2 commands:
+   pm2 list             Show all running apps
+   pm2 restart <name>   Restart an app
+   pm2 delete <name>    Stop and remove an app
 
-http://www.doc.gold.ac.uk/usr/232/
+-----------------------------------------------------------
+links.txt (required for deployment)
+-----------------------------------------------------------
 
----
+Create a file called links.txt in the main project directory.
+It must contain exactly one line:
 
-## Author
+   home=http://www.doc.gold.ac.uk/usr/232/
 
-Student ID: 33821542  
-Dynamic Web Applications – Goldsmiths, University of London
+(Replace 232 with your actual user folder number.)
+
+This tells Apache to route requests to your Node application.
+
+-----------------------------------------------------------
+Live Application URL
+-----------------------------------------------------------
+
+   http://www.doc.gold.ac.uk/usr/232/
+
+-----------------------------------------------------------
+Author
+-----------------------------------------------------------
+
+Student ID: 33821542
+Module: Dynamic Web Applications
+Goldsmiths, University of London
