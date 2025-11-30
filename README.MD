@@ -33,10 +33,6 @@ PUBLIC ROUTES:
 
 PROTECTED ROUTES (requires login):
   /users/list           List all users
-  /books/list           View all books
-  /books/add            Add a new book (GET/POST)
-  /books/edit/:id       Edit an existing book (GET/POST)
-  /books/delete/:id     Delete a book
 
 Logging out:
   /logout               Ends the session and redirects to login
