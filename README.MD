@@ -107,8 +107,6 @@ It must contain exactly one line:
 
    home=http://www.doc.gold.ac.uk/usr/232/
 
-(Replace 232 with your actual user folder number.)
-
 This tells Apache to route requests to your Node application.
 
 -----------------------------------------------------------
