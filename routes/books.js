@@ -1,12 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const redirectLogin = (req, res, next) => {
-    if (!req.session.userId) {
-        // send them to the real login URL
-        return res.redirect('/users/login');
-    }
-    next();
-};
 
 
 // Show search form
@@ -32,7 +25,7 @@ router.get('/search-result', function (req, res, next) {
 });
 
 // List all books
-router.get('/list', redirectLogin, function (req, res, next) {
+router.get('/list', function (req, res, next) {
     const sqlquery = "SELECT * FROM books";
 
     db.query(sqlquery, (err, result) => {
@@ -46,12 +39,12 @@ router.get('/list', redirectLogin, function (req, res, next) {
 
 
 // Show add form
-router.get('/add', redirectLogin, function (req, res, next) {
+router.get('/add', function (req, res, next) {
     res.render('addbook.ejs');
 });
 
 // Handle add form submit
-router.post('/add', redirectLogin, function (req, res, next) {
+router.post('/add', function (req, res, next) {
     const name = req.body.name;
     const price = parseFloat(req.body.price);
 
@@ -68,7 +61,7 @@ router.post('/add', redirectLogin, function (req, res, next) {
 
 
 // Delete a book
-router.get('/delete/:id', redirectLogin, function (req, res, next) {
+router.get('/delete/:id', function (req, res, next) {
     const id = req.params.id;
     const sqlquery = "DELETE FROM books WHERE id = ?";
 
@@ -82,7 +75,7 @@ router.get('/delete/:id', redirectLogin, function (req, res, next) {
 });
 
 // Show edit form
-router.get('/edit/:id', redirectLogin, function (req, res, next) {
+router.get('/edit/:id', function (req, res, next) {
     const id = req.params.id;
     const sqlquery = "SELECT * FROM books WHERE id = ?";
 
@@ -99,7 +92,7 @@ router.get('/edit/:id', redirectLogin, function (req, res, next) {
 });
 
 // Handle edit submit
-router.post('/edit/:id', redirectLogin, function (req, res, next) {
+router.post('/edit/:id', function (req, res, next) {
     const id = req.params.id;
     const name = req.body.name;
     const price = parseFloat(req.body.price);
