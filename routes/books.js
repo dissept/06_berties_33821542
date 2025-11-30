@@ -1,5 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const redirectLogin = (req, res, next) => {
+    if (!req.session.userId) {
+        // send them to the real login URL
+        return res.redirect('/users/login');
+    }
+    next();
+};
+
 
 // Show search form
 router.get('/search', function (req, res, next) {
