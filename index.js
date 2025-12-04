@@ -35,12 +35,17 @@ global.db = db;   // Make DB available in all routes
 const mainRouter = require('./routes/main');
 const usersRouter = require('./routes/users');
 const booksRouter = require('./routes/books');
+const weatherRouter = require('./routes/weather');
+const apiRouter = require('./routes/api');
 
 app.use('/', mainRouter);
 app.use('/users', usersRouter);
-app.use('/books', booksRouter);   // <-- books mounted here
+app.use('/books', booksRouter);   
+app.use('/weather', weatherRouter);
+app.use('/api', apiRouter);
 
 // ----- Start the web app -----
 app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}!`);
+    console.log(`Example app 
+    listening on port ${PORT}!`);
 });

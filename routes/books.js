@@ -1,7 +1,105 @@
 const express = require("express");
+const request = require('request');
 const router = express.Router();
 
+// Database setup
+const apiKey = process.env.OWM_API_KEY || '602d98af7df412ed72e391d8b30d3eb2';
 
+// Task 2 + 3: weather now route
+router.get('/now', (req, res, next) => {
+  const city = 'London';
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+  request(url, function (err, response, body) {
+    if (err) {
+      return next(err);
+    }
+
+    let weather;
+    try {
+      weather = JSON.parse(body);
+    } catch (parseError) {
+      return next(parseError);
+    }
+
+    // Task 6: error handling
+    if (!weather || weather.cod !== 200 || !weather.main) {
+      return res.send('No data found');
+    }
+
+    const wmsg =
+      'It is ' + weather.main.temp +
+      ' degrees in ' + weather.name +
+      '! <br> The humidity now is: ' +
+      weather.main.humidity + '%.';
+
+    res.send(wmsg);
+  });
+});
+
+// Task 4–6: /weather form
+router.get('/', (req, res, next) => {
+  const city = req.query.city || '';
+
+  // First visit: just show the form
+  if (!city) {
+    return res.render('weather.ejs', {
+      title: 'Weather',
+      weather: null,
+      error: null,
+    });
+  }
+
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+    city
+  )}&units=metric&appid=${apiKey}`;
+
+  request(url, function (err, response, body) {
+    if (err) {
+      return next(err);
+    }
+
+    let weather;
+    try {
+      weather = JSON.parse(body);
+    } catch (parseError) {
+      return next(parseError);
+    }
+
+    // Task 6: error handling for bad city / missing data
+    if (!weather || weather.cod !== 200 || !weather.main) {
+      return res.render('weather.ejs', {
+        title: 'Weather',
+        weather: null,
+        error: weather && weather.message
+          ? `Error: ${weather.message}`
+          : 'No data found for that city.',
+      });
+    }
+
+    // Task 5: extra info – feels like, wind, etc.
+    const weatherData = {
+      city: weather.name,
+      temp: weather.main.temp,
+      feelsLike: weather.main.feels_like,
+      humidity: weather.main.humidity,
+      description:
+        weather.weather && weather.weather[0]
+          ? weather.weather[0].description
+          : '',
+      windSpeed: weather.wind ? weather.wind.speed : null,
+      windDeg: weather.wind ? weather.wind.deg : null,
+    };
+
+    res.render('weather.ejs', {
+      title: 'Weather',
+      weather: weatherData,
+      error: null,
+    });
+  });
+});
+
+module.exports = router;
 // Show search form
 router.get('/search', function (req, res, next) {
     res.render("search.ejs");

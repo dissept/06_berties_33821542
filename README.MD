@@ -33,7 +33,6 @@ PUBLIC ROUTES:
 
 PROTECTED ROUTES (requires login):
   /users/list           List all users
-
 Logging out:
   /logout               Ends the session and redirects to login
 
@@ -112,9 +111,82 @@ Live Application URL
    http://www.doc.gold.ac.uk/usr/232/
 
 -----------------------------------------------------------
+Lab 9: Calling APIs & Providing APIs
+-----------------------------------------------------------
+
+Part A – Consuming External APIs (OpenWeatherMap)
+--------------------------------------------------
+
+A new /weather feature was added to the application:
+
+Routes:
+- GET /weather – displays a form where users can enter any city name;  
+  the application calls the OpenWeatherMap API and displays the result in a
+  human-friendly format (temperature, humidity, conditions, wind, etc).
+- GET /weather/now – a simpler route returning today's London weather as a formatted string.
+
+Implementation:
+- API calls are made using the request package.
+- The API key is stored securely in .env (OWM_API_KEY).
+- Weather results are displayed using an EJS view (weather.ejs).
+- Error handling was added so invalid cities do not crash the application.
+
+This completes Lab 9 Part A: Consuming APIs.
+
+Part B – Providing Our Own API
+------------------------------
+
+An API was created for external developers to access the bookshop data.
+
+Routes:
+- GET /api/books  
+  Returns a JSON array of all books in the database.
+
+Example response:
+
+[
+  { "id": 1, "name": "The Hobbit", "price": 9.99 },
+  { "id": 2, "name": "1984", "price": 8.50 }
+]
+
+This route mirrors /books/list but returns JSON instead of HTML, making it machine-readable.
+
+Part C – API Extensions
+-----------------------
+
+The /api/books endpoint supports several optional query parameters:
+
+1. Search for a keyword
+
+   /api/books?search=world
+
+   Returns all books whose names contain "world".
+
+2. Filter by price range
+
+   /api/books?minprice=5&max_price=10
+
+3. Sort results
+
+   /api/books?sort=name
+   /api/books?sort=price
+
+Only specific columns are allowed for sorting (name or price) to prevent SQL injection.
+
+Part D – Optional Extensions (Ungraded)
+---------------------------------------
+
+The API structure could be extended in future to include:
+
+- Rate limiting  
+- Pagination  
+- Authentication and API keys  
+- Versioning (for example, /api/v1/books vs /api/v2/books)
+
+-----------------------------------------------------------
 Author
 -----------------------------------------------------------
 
-Student ID: 33821542
-Module: Dynamic Web Applications
-Goldsmiths, University of London
+Student ID: 33821542  
+Module: Dynamic Web Applications  
+Goldsmiths, University of London.
